@@ -25,7 +25,7 @@ public class Snake extends JComponent {
         snake = new LinkedList<>(List.of(new Head()));
         for (int i=1;i<=3;i++){
             int[] location = snake.getLast().locate;
-            snake.add(new Body(new int[]{location[0]-17,location[1]}));
+            snake.add(new Body(new int[]{location[0],location[1]-21}));
         }
     }
 
@@ -33,7 +33,7 @@ public class Snake extends JComponent {
 
     class Head extends Body{
         public Head(){
-            super(new int[]{150,50});
+            super(new int[]{64,64});
         }
     }
 
@@ -42,29 +42,27 @@ public class Snake extends JComponent {
         private int size;
         private int[] locate;
         public Body(int[] locate){
-            size = 15;
+            size = 20;
             this.locate = locate;
         }
     }
 
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         g.setColor(Color.GREEN);
         for (Body body:snake){
-            g.fillRect(body.locate[0],body.locate[1],body.size, body.size);
+            g.fillRect(body.locate[0],body.locate[1],20, 20);
         }
-        super.paint(g);
     }
 
     public void step(){
 
-        int[] previousCoordinate = Arrays.copyOf(snake.getFirst().locate,snake.getFirst().size);
+        int[] previousCoordinate = Arrays.copyOf(snake.getFirst().locate,2);
 
         for (Body body:snake){
             if (body instanceof Head){
-                body.locate[0]+=17;
-
+                body.locate[0]+=21;
             }else{
                 int[] helper;
                 helper = body.locate;
