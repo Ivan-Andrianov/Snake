@@ -3,6 +3,8 @@ package org.andrianov;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeListener;
 
 public class GameWindow extends JFrame {
 
@@ -13,6 +15,7 @@ public class GameWindow extends JFrame {
 
     public GameWindow(){
         super("Snake");
+
         Container rootPane = this.getRootPane();
         BoxLayout bl = new BoxLayout(rootPane,BoxLayout.X_AXIS);
         rootPane.setLayout(bl);
@@ -74,12 +77,44 @@ public class GameWindow extends JFrame {
 
         gameContainer.setOpaque(false);
 
+        Action action = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                switch (e.getActionCommand()){
+                    case ("w"):
+                        Snake.direction = Snake.North;
+                        break;
+                    case ("d"):
+                        Snake.direction = Snake.East;
+                        break;
+                    case ("s"):
+                        Snake.direction = Snake.South;
+                        break;
+                    case ("a"):
+                        Snake.direction = Snake.West;
+                        break;
+                }
+            }
+        };
+
+        getRootPane().getInputMap().put(KeyStroke.getKeyStroke('s'),"s");
+        getRootPane().getInputMap().put(KeyStroke.getKeyStroke('d'),"d");
+        getRootPane().getInputMap().put(KeyStroke.getKeyStroke('w'),"w");
+        getRootPane().getInputMap().put(KeyStroke.getKeyStroke('a'),"a");
+        getRootPane().getActionMap().put("s",action);
+        getRootPane().getActionMap().put("w",action);
+        getRootPane().getActionMap().put("a",action);
+        getRootPane().getActionMap().put("d",action);
+
+
 
 
         this.setSize(800,800);
         this.setLocation(300,20);
         this.setVisible(true);
     }
+
 
     public JPanel getGamePanel(){
         return gamePanel;
