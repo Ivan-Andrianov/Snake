@@ -83,16 +83,16 @@ public class GameWindow extends JFrame {
 
                 switch (e.getActionCommand()){
                     case ("w"):
-                        Snake.direction = Snake.North;
+                        if (Snake.direction!=Snake.South) Snake.direction = Snake.North;
                         break;
                     case ("d"):
-                        Snake.direction = Snake.East;
+                        if (Snake.direction!=Snake.West) Snake.direction = Snake.East;
                         break;
                     case ("s"):
-                        Snake.direction = Snake.South;
+                        if (Snake.direction!=Snake.North) Snake.direction = Snake.South;
                         break;
                     case ("a"):
-                        Snake.direction = Snake.West;
+                        if (Snake.direction!=Snake.East) Snake.direction = Snake.West;
                         break;
                 }
             }
