@@ -33,9 +33,9 @@ public class GameWindow extends JFrame {
         /*Создаем игровую панель и помещаем ее в контейнер игры*/
         this.gamePanel = new JPanel();
         gamePanel.setLayout(null);
-        gamePanel.setPreferredSize(new Dimension(641,431));
-        gamePanel.setMaximumSize(new Dimension(641,431));
-        gamePanel.setMinimumSize(new Dimension(641,431));
+        gamePanel.setPreferredSize(new Dimension(641,432));
+        gamePanel.setMaximumSize(new Dimension(641,432));
+        gamePanel.setMinimumSize(new Dimension(641,432));
         gamePanel.setBorder(new LineBorder(Color.BLACK,5));
         gamePanel.setBackground(Color.GRAY);
         rootPane.setBackground(new Color(62,60,92));
@@ -83,16 +83,16 @@ public class GameWindow extends JFrame {
 
                 switch (e.getActionCommand()){
                     case ("w"):
-                        Snake.direction = Snake.North;
+                        if (Snake.direction!=Snake.South) Snake.direction = Snake.North;
                         break;
                     case ("d"):
-                        Snake.direction = Snake.East;
+                        if (Snake.direction!=Snake.West) Snake.direction = Snake.East;
                         break;
                     case ("s"):
-                        Snake.direction = Snake.South;
+                        if (Snake.direction!=Snake.North) Snake.direction = Snake.South;
                         break;
                     case ("a"):
-                        Snake.direction = Snake.West;
+                        if (Snake.direction!=Snake.East) Snake.direction = Snake.West;
                         break;
                 }
             }

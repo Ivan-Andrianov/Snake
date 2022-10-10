@@ -23,7 +23,7 @@ public class Snake extends JComponent {
     public static int direction;
 
     public Snake(){
-        direction = Snake.East;
+        direction = Snake.South;
         snake = new LinkedList<>(List.of(new Head()));
         for (int i=1;i<=3;i++){
             int[] location = snake.getLast().locate;
@@ -65,16 +65,20 @@ public class Snake extends JComponent {
             if (body instanceof Head){
                 switch (Snake.direction) {
                     case (Snake.East):
-                        body.locate[0]+=21;
+                        if (body.locate[0]==610) body.locate[0]=1;
+                        else body.locate[0]+=21;
                         break;
                     case (Snake.West):
-                        body.locate[0]-=21;
+                        if (body.locate[0]==1) body.locate[0]=610;
+                        else body.locate[0]-=21;
                         break;
                     case (Snake.North):
-                        body.locate[1]-=21;
+                        if (body.locate[1]==1) body.locate[1] = 400;
+                        else body.locate[1]-=21;
                         break;
                     case (Snake.South):
-                        body.locate[1]+=21;
+                        if (body.locate[1]==400) body.locate[1] = 1;
+                        else body.locate[1]+=21;
                         break;
                 }
             }else{
