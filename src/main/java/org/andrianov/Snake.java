@@ -10,6 +10,9 @@ import java.util.List;
 public class Snake extends JComponent {
     /* Константы направления движения головы змейки*/
 
+    private GameWindow gameWindow;
+
+    private Map<Integer,Integer[]> freeFields;
     public final static int North = 0;
     public final static int South = 1;
     public final static int West = 2;
@@ -22,7 +25,9 @@ public class Snake extends JComponent {
     /*Текущее направление головы змейки*/
     public static int direction;
 
-    public Snake(){
+    public Snake(GameWindow gameWindow){
+        this.gameWindow = gameWindow;
+        this.freeFields = gameWindow.getFreeFields();
         direction = Snake.South;
         snake = new LinkedList<>(List.of(new Head()));
         for (int i=1;i<=3;i++){
@@ -45,6 +50,7 @@ public class Snake extends JComponent {
         public Body(int[] locate){
             size = 20;
             this.locate = locate;
+            freeFields.remove((locate[0]/21-1)+(locate[1]/21-1)*100);
         }
     }
 
@@ -81,6 +87,8 @@ public class Snake extends JComponent {
                         else body.locate[1]+=21;
                         break;
                 }
+                freeFields.remove((body.locate[0]/21-1)+(body.locate[1]/21-1)*100);
+
             }else{
                 int[] helper;
                 helper = body.locate;
@@ -88,6 +96,10 @@ public class Snake extends JComponent {
                 previousCoordinate = helper;
             }
         }
+        if (snake.getFirst().locate[0]==gameWindow.getCandy().giveMeLocation()[0] && snake.getFirst().locate[1]==gameWindow.getCandy().giveMeLocation()[1]){
+            snake.add(new Body(previousCoordinate));
+            gameWindow.getCandy().changeLocation();
+        }else freeFields.put((previousCoordinate[0]/21-1)+(previousCoordinate[1]/21-1)*100,new Integer[]{previousCoordinate[0],previousCoordinate[1]});
         this.repaint();
     }
 }

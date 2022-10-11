@@ -5,12 +5,18 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameWindow extends JFrame {
 
     private Snake snake;
+
+    private Candy candy;
     private JPanel gamePanel;
     private static Color textColor = new Color(153, 184, 68);
+
+    private Map<Integer,Integer[]> freeFields = new HashMap<>();
 
 
     public GameWindow(){
@@ -29,19 +35,29 @@ public class GameWindow extends JFrame {
         gameContainer.setMinimumSize(new Dimension(700,1080));
 
 
+        /*Нумеруем свободные поля*/
+        for (int i=0 ; i<=19 ; i++){
+            for (int j=0;j<=29;j++){
+                freeFields.put(i*100+j,new Integer[]{1+21*j,1+21*i});
+            }
+        }
+
 
         /*Создаем игровую панель и помещаем ее в контейнер игры*/
         this.gamePanel = new JPanel();
         gamePanel.setLayout(null);
-        gamePanel.setPreferredSize(new Dimension(641,432));
-        gamePanel.setMaximumSize(new Dimension(641,432));
-        gamePanel.setMinimumSize(new Dimension(641,432));
+        gamePanel.setPreferredSize(new Dimension(641,431));
+        gamePanel.setMaximumSize(new Dimension(641,431));
+        gamePanel.setMinimumSize(new Dimension(641,431));
         gamePanel.setBorder(new LineBorder(Color.BLACK,5));
         gamePanel.setBackground(Color.GRAY);
         rootPane.setBackground(new Color(62,60,92));
         gamePanel.setLayout(null);
-        this.snake = new Snake();
+        this.snake = new Snake(this);
         gamePanel.add(snake);
+        this.candy = new Candy(this);
+        gamePanel.add(candy);
+        candy.setBounds(5,5,635,425);
         snake.setBounds(5,5,635,425);
 
 
@@ -123,4 +139,10 @@ public class GameWindow extends JFrame {
     public Snake getSnake(){
         return snake;
     }
+
+    public Map<Integer, Integer[]> getFreeFields() {
+        return freeFields;
+    }
+
+    public Candy getCandy(){return this.candy;}
 }
