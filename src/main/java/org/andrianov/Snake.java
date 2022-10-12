@@ -71,7 +71,6 @@ public class Snake extends JComponent {
             this.size = 20;
             this.locate = locate;
             freeFields.remove(((locate[0]-1)/21)+(locate[1]-1)/21*100);
-            System.out.println(freeFields.size());
         }
 
         public Color getColor() {
@@ -160,11 +159,13 @@ public class Snake extends JComponent {
         if (snake.getFirst().locate[0]==gameWindow.getCandy().giveMeLocation()[0] && snake.getFirst().locate[1]==gameWindow.getCandy().giveMeLocation()[1]){
             this.snake.add(new Body(previousCoordinate));
             this.amountBody+=1;
+            gameWindow.getScore().setText("Score: "+(amountBody-4));
             if (amountBody==10 || amountBody==20) setSpeed(speed-15);
             this.gameWindow.getCandy().changeLocation();
         }else freeFields.put((previousCoordinate[0]-1)/21+(previousCoordinate[1]-1)/21*100,new Integer[]{previousCoordinate[0],previousCoordinate[1]});
 
         this.repaint();
+        gameWindow.check = true;
         gameWindow.getSnake().setCanTurn(true);
         return true;
     }

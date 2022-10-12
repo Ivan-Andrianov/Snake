@@ -16,6 +16,10 @@ public class GameWindow extends JFrame {
     private static Color textColor = new Color(213, 211, 43);
     private Map<Integer,Integer[]> freeFields = new HashMap<>();
 
+    public boolean check = true;
+
+    private JTextField score;
+
 
     public GameWindow(){
         super("Snake");
@@ -63,6 +67,14 @@ public class GameWindow extends JFrame {
 
         /*Создаем панель, для отрисовки количества очков*/
         JPanel scorePanel = new JPanel();
+        this.score = new JTextField();
+        score.setEditable(false);
+        score.setText("Score: "+0);
+        score.setOpaque(false);
+        score.setBorder(null);
+        score.setForeground(textColor);
+        score.setColumns(10);
+        score.setFont(new Font(Font.DIALOG,Font.PLAIN,45));
         scorePanel.setMinimumSize(new Dimension(700,300));
         scorePanel.setPreferredSize(new Dimension(700,300));
         scorePanel.setMaximumSize(new Dimension(700,300));
@@ -71,12 +83,15 @@ public class GameWindow extends JFrame {
         scorePanel.setLayout(sl);
         JTextField gameName = new JTextField("Snake");
         scorePanel.add(gameName);
+        scorePanel.add(score);
         gameName.setOpaque(false);
         gameName.setBorder(null);
         gameName.setEditable(false);
         gameName.setFont(new Font(Font.DIALOG,Font.PLAIN,70));
         gameName.setForeground(textColor);
         sl.putConstraint(SpringLayout.WEST,gameName,230,SpringLayout.WEST,scorePanel);
+        sl.putConstraint(SpringLayout.NORTH,score,220,SpringLayout.NORTH,scorePanel);
+        sl.putConstraint(SpringLayout.WEST,score,30,SpringLayout.WEST,scorePanel);
 
 
 
@@ -91,44 +106,48 @@ public class GameWindow extends JFrame {
 
         gameContainer.setOpaque(false);
 
-        Action action = new AbstractAction() {
+
+        setFocusable(true);
+        addKeyListener(new KeyAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void keyPressed(KeyEvent e) {
+                if (!check) return;
+                check =false;
                 while (!snake.isCanTurn()){
                     System.out.println(snake.isCanTurn());
                 }
-                switch (e.getActionCommand()){
-                    case ("w"):
+                switch (e.getKeyChar()){
+                    case ('w'):
+                    case ('W'):
+                    case ('ц'):
+                    case ('Ц'):
                         if (Snake.direction!=Snake.South) Snake.direction = Snake.North;
                         break;
-                    case ("d"):
+                    case ('d'):
+                    case ('D'):
+                    case ('в'):
+                    case ('В'):
                         if (Snake.direction!=Snake.West) Snake.direction = Snake.East;
                         break;
-                    case ("s"):
+                    case ('s'):
+                    case ('S'):
+                    case ('ы'):
+                    case ('Ы'):
                         if (Snake.direction!=Snake.North) Snake.direction = Snake.South;
                         break;
-                    case ("a"):
+                    case ('ф'):
+                    case ('Ф'):
+                    case ('a'):
+                    case ('A'):
                         if (Snake.direction!=Snake.East) Snake.direction = Snake.West;
                         break;
                 }
                 snake.setCanTurn(false);
             }
-        };
-
-        getRootPane().getInputMap().put(KeyStroke.getKeyStroke('s'),"s");
-        getRootPane().getInputMap().put(KeyStroke.getKeyStroke('d'),"d");
-        getRootPane().getInputMap().put(KeyStroke.getKeyStroke('w'),"w");
-        getRootPane().getInputMap().put(KeyStroke.getKeyStroke('a'),"a");
-        getRootPane().getActionMap().put("s",action);
-        getRootPane().getActionMap().put("w",action);
-        getRootPane().getActionMap().put("a",action);
-        getRootPane().getActionMap().put("d",action);
+        });
 
 
-
-
-        this.setSize(800,800);
-        this.setLocation(300,20);
+        this.setSize(2000,2000);
         this.setVisible(true);
     }
 
@@ -146,4 +165,8 @@ public class GameWindow extends JFrame {
     }
 
     public Candy getCandy(){return this.candy;}
+
+    public JTextField getScore(){
+        return score;
+    }
 }
