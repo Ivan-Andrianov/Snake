@@ -9,13 +9,10 @@ public class Main {
 
         GameWindow gameWindow = new GameWindow();
         Snake snake = gameWindow.getSnake();
-        JPanel panel = gameWindow.getGamePanel();
 
-
-        while (true){
+        while (snake.step()){
             try {
-                Thread.sleep(100);
-                snake.step();
+                Thread.sleep(snake.getSpeed());
             } catch (InterruptedException e) {
                 System.err.println("Ошибка приостановления потока");
             }

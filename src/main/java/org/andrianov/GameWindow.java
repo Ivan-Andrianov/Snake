@@ -11,11 +11,9 @@ import java.util.Map;
 public class GameWindow extends JFrame {
 
     private Snake snake;
-
     private Candy candy;
     private JPanel gamePanel;
-    private static Color textColor = new Color(153, 184, 68);
-
+    private static Color textColor = new Color(213, 211, 43);
     private Map<Integer,Integer[]> freeFields = new HashMap<>();
 
 
@@ -50,7 +48,7 @@ public class GameWindow extends JFrame {
         gamePanel.setMaximumSize(new Dimension(641,431));
         gamePanel.setMinimumSize(new Dimension(641,431));
         gamePanel.setBorder(new LineBorder(Color.BLACK,5));
-        gamePanel.setBackground(Color.GRAY);
+        gamePanel.setBackground(Color.DARK_GRAY);
         rootPane.setBackground(new Color(62,60,92));
         gamePanel.setLayout(null);
         this.snake = new Snake(this);
@@ -96,7 +94,9 @@ public class GameWindow extends JFrame {
         Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                while (!snake.isCanTurn()){
+                    System.out.println(snake.isCanTurn());
+                }
                 switch (e.getActionCommand()){
                     case ("w"):
                         if (Snake.direction!=Snake.South) Snake.direction = Snake.North;
@@ -111,6 +111,7 @@ public class GameWindow extends JFrame {
                         if (Snake.direction!=Snake.East) Snake.direction = Snake.West;
                         break;
                 }
+                snake.setCanTurn(false);
             }
         };
 

@@ -12,6 +12,8 @@ public class Snake extends JComponent {
 
     private GameWindow gameWindow;
 
+    private int amountBody = 1;
+
     private Map<Integer,Integer[]> freeFields;
     public final static int North = 0;
     public final static int South = 1;
@@ -21,19 +23,34 @@ public class Snake extends JComponent {
     /*Список всех частей тела змейки (Включая голову)*/
     LinkedList<Body> snake;
 
+    private int speed;
+
 
     /*Текущее направление головы змейки*/
     public static int direction;
+
+    private boolean canTurn;
 
     public Snake(GameWindow gameWindow){
         this.gameWindow = gameWindow;
         this.freeFields = gameWindow.getFreeFields();
         direction = Snake.South;
-        snake = new LinkedList<>(List.of(new Head()));
+        this.snake = new LinkedList<>(List.of(new Head()));
+        this.speed = 80;
+        this.canTurn = true;
         for (int i=1;i<=3;i++){
             int[] location = snake.getLast().locate;
             snake.add(new Body(new int[]{location[0],location[1]-21}));
+            amountBody+=1;
         }
+    }
+
+    public boolean isCanTurn() {
+        return canTurn;
+    }
+
+    public void setCanTurn(boolean canTurn) {
+        this.canTurn = canTurn;
     }
 
     /*Класс головы змейки*/
@@ -47,10 +64,22 @@ public class Snake extends JComponent {
     class Body{
         private int size;
         private int[] locate;
+
+        private Color color;
         public Body(int[] locate){
-            size = 20;
+            this.color = Color.GREEN;
+            this.size = 20;
             this.locate = locate;
-            freeFields.remove((locate[0]/21-1)+(locate[1]/21-1)*100);
+            freeFields.remove(((locate[0]-1)/21)+(locate[1]-1)/21*100);
+            System.out.println(freeFields.size());
+        }
+
+        public Color getColor() {
+            return this.color;
+        }
+
+        public void setColor(Color color){
+            this.color = color;
         }
     }
 
@@ -59,11 +88,36 @@ public class Snake extends JComponent {
     public void paintComponent(Graphics g) {
         g.setColor(Color.GREEN);
         for (Body body:snake){
-            g.fillRect(body.locate[0],body.locate[1],body.size, body.size);
+            if (body instanceof Head){
+                g.setColor(body.getColor());
+                switch (Snake.direction){
+                    case Snake.South -> {
+                        g.fillRect(body.locate[0],body.locate[1],20,15);
+                        g.fillOval(body.locate[0],body.locate[1],20,20);
+                        break;
+                    }
+                    case Snake.North -> {
+                        g.fillRect(body.locate[0],body.locate[1]+5,20,15);
+                        g.fillOval(body.locate[0],body.locate[1],20,20);
+                    }
+                    case Snake.West -> {
+                        g.fillRect(body.locate[0]+5,body.locate[1],15,20);
+                        g.fillOval(body.locate[0],body.locate[1],20,20);
+                    }
+                    case Snake.East -> {
+                        g.fillRect(body.locate[0],body.locate[1],15,20);
+                        g.fillOval(body.locate[0],body.locate[1],20,20);
+                    }
+                }
+            }else{
+                g.setColor(body.getColor());
+                g.fillRect(body.locate[0],body.locate[1],body.size, body.size);
+            }
         }
     }
 
-    public void step(){
+    public boolean step(){
+
 
         int[] previousCoordinate = Arrays.copyOf(snake.getFirst().locate,2);
 
@@ -87,7 +141,14 @@ public class Snake extends JComponent {
                         else body.locate[1]+=21;
                         break;
                 }
-                freeFields.remove((body.locate[0]/21-1)+(body.locate[1]/21-1)*100);
+                if (!freeFields.containsKey((body.locate[0]-1)/21+(body.locate[1]-1)/21*100)){
+                    body.locate = previousCoordinate;
+                    snake.getFirst().setColor(Color.RED);
+                    snake.getFirst().locate = previousCoordinate;
+                    gameWindow.repaint();
+                    return false;
+                }
+                freeFields.remove(((body.locate[0]-1)/21)+(body.locate[1]-1)/21*100);
 
             }else{
                 int[] helper;
@@ -97,9 +158,21 @@ public class Snake extends JComponent {
             }
         }
         if (snake.getFirst().locate[0]==gameWindow.getCandy().giveMeLocation()[0] && snake.getFirst().locate[1]==gameWindow.getCandy().giveMeLocation()[1]){
-            snake.add(new Body(previousCoordinate));
-            gameWindow.getCandy().changeLocation();
-        }else freeFields.put((previousCoordinate[0]/21-1)+(previousCoordinate[1]/21-1)*100,new Integer[]{previousCoordinate[0],previousCoordinate[1]});
+            this.snake.add(new Body(previousCoordinate));
+            this.amountBody+=1;
+            if (amountBody==10 || amountBody==20) setSpeed(speed-15);
+            this.gameWindow.getCandy().changeLocation();
+        }else freeFields.put((previousCoordinate[0]-1)/21+(previousCoordinate[1]-1)/21*100,new Integer[]{previousCoordinate[0],previousCoordinate[1]});
+
         this.repaint();
+        gameWindow.getSnake().setCanTurn(true);
+        return true;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+    public void setSpeed(int speed){
+        this.speed = speed;
     }
 }

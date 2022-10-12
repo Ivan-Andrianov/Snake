@@ -19,11 +19,12 @@ public class Candy extends JComponent {
     @Override
     protected void paintComponent(Graphics g) {
         g.setColor(Color.ORANGE);
-        g.fillRect(location[0],location[1],20,20);
+        g.fillOval(location[0],location[1],20,20);
     }
 
     public Integer[] giveMeLocation(){return location;}
 
+    /*Меняет локацию конфеты*/
     public void changeLocation(){
         Random random = new Random();
         this.location =  (Integer[]) new ArrayList(freeFields.values()).get(random.nextInt(freeFields.size()));
